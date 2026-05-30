@@ -29,9 +29,21 @@ renders to
 
 ## Install
 
+This package is not on Packagist, so tell Composer where to find it with a
+one-time `repositories` entry, then require it:
+
 ```bash
-composer require bigins/scriptor-markdown-containers
+composer config repositories.scriptor-markdown-containers \
+  vcs https://github.com/bigin/scriptor-markdown-containers
+composer require bigins/scriptor-markdown-containers:^0.1
 ```
+
+The first command adds a VCS repository to your `composer.json`; without it
+`composer require` reports *"Could not find a version of package …"*. If you
+install into Scriptor itself, its `composer.json` already ships a
+`repositories` block covering `bigins/*` plugins, so the first command is not
+needed there and a plain `composer require bigins/scriptor-markdown-containers`
+works.
 
 The plugin is **stateless**: it only subscribes to the frontend
 `ContentRendering` event and owns no database schema, so there is no
