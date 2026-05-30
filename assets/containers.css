@@ -1,0 +1,84 @@
+/*
+ * scriptor-markdown-containers — optional neutral default styles.
+ *
+ * Theme-agnostic styling for the built-in container types. Drop this file
+ * into a theme (or copy the rules) if you use the default `md-container`
+ * classes. Sites that map the containers onto their own framework (UIkit,
+ * Tailwind, …) via the `classes` config key do not need this file.
+ *
+ * Colours are defined as CSS custom properties so a theme can retint a
+ * single type without restyling the whole block.
+ */
+
+.md-container {
+    --md-container-bg: #f4f5f7;
+    --md-container-border: #c2c7d0;
+    --md-container-fg: inherit;
+
+    margin: 1rem 0;
+    padding: 0.85rem 1rem;
+    border-left: 4px solid var(--md-container-border);
+    border-radius: 4px;
+    background: var(--md-container-bg);
+    color: var(--md-container-fg);
+}
+
+.md-container > :first-child {
+    margin-top: 0;
+}
+
+.md-container > :last-child {
+    margin-bottom: 0;
+}
+
+.md-container__title {
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+}
+
+/* note — neutral grey (also the base fallback above). */
+.md-container--note {
+    --md-container-bg: #f4f5f7;
+    --md-container-border: #c2c7d0;
+}
+
+/* info — blue. */
+.md-container--info {
+    --md-container-bg: #eaf2fb;
+    --md-container-border: #4a90d9;
+}
+
+/* tip — green. */
+.md-container--tip {
+    --md-container-bg: #e9f6ee;
+    --md-container-border: #43a047;
+}
+
+/* warning — amber. */
+.md-container--warning {
+    --md-container-bg: #fdf6e3;
+    --md-container-border: #d9a106;
+}
+
+/* danger — red. */
+.md-container--danger {
+    --md-container-bg: #fdecea;
+    --md-container-border: #d64541;
+}
+
+/* details — collapsible disclosure. */
+details.md-container--details {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+}
+
+details.md-container--details > summary {
+    cursor: pointer;
+    font-weight: 600;
+    margin: -0.6rem -1rem;
+    padding: 0.6rem 1rem;
+}
+
+details.md-container--details[open] > summary {
+    margin-bottom: 0.6rem;
+}

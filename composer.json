@@ -1,0 +1,42 @@
+{
+    "name": "bigins/scriptor-markdown-containers",
+    "description": "Configurable fenced-container syntax (:::note, :::warning, :::details, …) for Scriptor CMS page content, rendered through the Sanitizer with theme-neutral classes.",
+    "type": "scriptor-plugin",
+    "license": "MIT",
+    "keywords": ["scriptor", "scriptor-plugin", "markdown", "containers", "callout", "admonition", "cms"],
+    "authors": [
+        {
+            "name": "bigin",
+            "email": "juri.ehret@gmail.com",
+            "homepage": "https://ehret-studio.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "beta",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "erusev/parsedown": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bigins\\ScriptorMarkdownContainers\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bigins\\ScriptorMarkdownContainers\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "scriptor": {
+            "plugin": "Bigins\\ScriptorMarkdownContainers\\Plugin"
+        }
+    }
+}
