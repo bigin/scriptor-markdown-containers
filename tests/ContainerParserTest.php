@@ -80,6 +80,36 @@ final class ContainerParserTest extends TestCase
         self::assertSame("text\n:::\nmore", $nodes[0]['text']);
     }
 
+    public function testTwoTopLevelContainersKeepTextBetweenThem(): void
+    {
+        // Regression: an earlier parser dropped the second container and the
+        // text between it and the first, because of a by-reference flush
+        // closure. The full sequence must survive in document order.
+        $src = "Intro\n\n:::warning\nA\n:::\n\nMiddle\n\n:::note\nB\n:::\n\nOutro";
+        $nodes = $this->parser()->parse($src);
+
+        self::assertCount(5, $nodes);
+        self::assertSame('Intro', trim($nodes[0]['text']));
+        self::assertSame('warning', $nodes[1]['ctype']);
+        self::assertSame('Middle', trim($nodes[2]['text']));
+        self::assertSame('note', $nodes[3]['ctype']);
+        self::assertSame('Outro', trim($nodes[4]['text']));
+    }
+
+    public function testSiblingContainerAfterNestedOneIsKept(): void
+    {
+        // The exact shape that regressed: a nested container, then a sibling
+        // container at the top level after the outer one closes.
+        $src = ":::warning\nOuter\n:::note\nInner\n:::\n:::\n\n:::details \"D\"\nHidden\n:::\n\nTail";
+        $nodes = $this->parser()->parse($src);
+
+        self::assertCount(3, $nodes);
+        self::assertSame('warning', $nodes[0]['ctype']);
+        self::assertSame('details', $nodes[1]['ctype']);
+        self::assertSame('Hidden', trim($nodes[1]['children'][0]['text']));
+        self::assertSame('Tail', trim($nodes[2]['text']));
+    }
+
     public function testTildeCodeFenceIsRespected(): void
     {
         $source = "~~~\n:::note\nliteral\n:::\n~~~";

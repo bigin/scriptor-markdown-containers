@@ -82,6 +82,32 @@ final class ContainerRendererTest extends TestCase
         self::assertLessThan($innerPos, $outerPos, 'Outer wrapper should enclose the inner one');
     }
 
+    public function testDocumentOrderIsPreservedAcrossContainersAndText(): void
+    {
+        // Regression: containers used to float to the top while the text
+        // around them sank to the bottom, and text between two containers
+        // was dropped entirely. Assert the rendered fragments appear in
+        // source order.
+        $html = $this->render("Intro\n\n:::warning\nA\n:::\n\nMiddle\n\n:::note\nB\n:::\n\nOutro");
+
+        $posIntro   = strpos($html, '<p>Intro</p>');
+        $posWarning = strpos($html, 'md-container--warning');
+        $posMiddle  = strpos($html, '<p>Middle</p>');
+        $posNote    = strpos($html, 'md-container--note');
+        $posOutro   = strpos($html, '<p>Outro</p>');
+
+        self::assertNotFalse($posIntro);
+        self::assertNotFalse($posMiddle);
+        self::assertNotFalse($posOutro);
+        self::assertTrue(
+            $posIntro < $posWarning
+            && $posWarning < $posMiddle
+            && $posMiddle < $posNote
+            && $posNote < $posOutro,
+            'Rendered fragments must follow source order',
+        );
+    }
+
     public function testClassOverrideFromConfig(): void
     {
         $html = $this->render(":::note\nHi\n:::", ['classes' => ['note' => 'uk-alert uk-alert-primary']]);

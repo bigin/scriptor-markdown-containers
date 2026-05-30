@@ -50,13 +50,6 @@ final class ContainerParser
         $fence = null;
         $count = count($lines);
 
-        $flush = static function () use (&$nodes, &$text): void {
-            if ($text !== []) {
-                $nodes[] = ['text' => implode("\n", $text)];
-                $text = [];
-            }
-        };
-
         while ($index < $count) {
             $line = $lines[$index];
             $trimmed = trim($line);
@@ -81,7 +74,7 @@ final class ContainerParser
             }
 
             if (preg_match(self::OPEN, $trimmed, $open) === 1 && $this->registry->has($open[1])) {
-                $flush();
+                $this->flushText($nodes, $text);
                 $index++; // consume the opening fence
                 $children = $this->parseLevel($lines, $index, true);
                 $nodes[] = [
@@ -94,7 +87,7 @@ final class ContainerParser
 
             if (preg_match(self::CLOSE, $trimmed) === 1) {
                 if ($nested) {
-                    $flush();
+                    $this->flushText($nodes, $text);
                     $index++; // consume the closing fence and pop a level
                     return $nodes;
                 }
@@ -108,8 +101,30 @@ final class ContainerParser
             $index++;
         }
 
-        $flush();
+        $this->flushText($nodes, $text);
 
         return $nodes;
+    }
+
+    /**
+     * Append the buffered lines as a text node and reset the buffer.
+     *
+     * Whitespace-only buffers (the blank lines left between a closing
+     * fence and the next block) are dropped: they carry no content and
+     * would otherwise litter the tree with empty `['text' => '']` nodes.
+     *
+     * @param array<int, array<string, mixed>> $nodes
+     * @param array<int, string>               $text
+     */
+    private function flushText(array &$nodes, array &$text): void
+    {
+        if ($text === []) {
+            return;
+        }
+        $joined = implode("\n", $text);
+        $text = [];
+        if (trim($joined) !== '') {
+            $nodes[] = ['text' => $joined];
+        }
     }
 }
