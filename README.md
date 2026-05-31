@@ -39,11 +39,9 @@ composer require bigins/scriptor-markdown-containers:^0.1
 ```
 
 The first command adds a VCS repository to your `composer.json`; without it
-`composer require` reports *"Could not find a version of package …"*. If you
-install into Scriptor itself, its `composer.json` already ships a
-`repositories` block covering `bigins/*` plugins, so the first command is not
-needed there and a plain `composer require bigins/scriptor-markdown-containers`
-works.
+`composer require` reports *"Could not find a version of package …"*. Scriptor
+ships a clean `composer.json` with no plugin repositories declared, so this
+step is required when installing into Scriptor too.
 
 The plugin is **stateless**: it only subscribes to the frontend
 `ContentRendering` event and owns no database schema, so there is no
